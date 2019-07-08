@@ -13,7 +13,7 @@ make
 ## Run project
 Copy test data to build folder:
 ```
-cp -r ../../../computer_vision_basics_data/electricity_bill/build/* .
+cp -r ../../computer_vision_basics_data/electricity_bill_detection/build/* .
 ```
 
 Create output folders:
@@ -27,5 +27,5 @@ mkdir output_images_4
 
 Run electricity bill warper:
 ```
-./electricity_bill
+./electricity_bill_detection
 ```
