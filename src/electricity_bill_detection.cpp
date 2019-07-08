@@ -9,29 +9,75 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-float cvEuclidDistf(cv::Point p1, cv::Point p2);
-void cvFindNearestPoint(std::vector<cv::Point> sequences, cv::Point root, cv::Point& result);
 enum cvSelectTopContours_Mode {
     CV_SELECT_CONTOUR_AREA = 0,
     CV_SELECT_CONTOUR_SIZE = 1
 };
-void cvSelectTopContours(std::vector<std::vector<cv::Point>> src, std::vector<std::vector<cv::Point>>& dst, int top, int mode, int minSize, double minArea);
 
-void executeMain(cv::Mat orgImage, cv::Mat image, std::vector<cv::Mat>& informations);
-void getBillContour(cv::Mat image, std::vector<std::vector<cv::Point>>& contours);
-void getCornersFromContour(std::vector<cv::Point> sequences, std::vector<cv::Point>& rawCorners);
-void getRawVertices(cv::Mat filledRawContour, std::vector<cv::Point> rawCorners, int noHrzPieces, std::vector<cv::Point>& rawTops, std::vector<cv::Point>& rawBots, int noVtcPieces, std::vector<cv::Point>& rawLefts, std::vector<cv::Point>& rawRights);
-void getquadVertices(std::vector<cv::Point> quadCorners, int noHrzPieces, int noVtcPieces, std::vector<cv::Point>& quadTops, std::vector<cv::Point>& quadBots, std::vector<cv::Point>& quadLefts, std::vector<cv::Point>& quadRights);
-void warpToMedialBill(cv::Mat rawBill, cv::Mat& medialBill, std::vector<cv::Point> rawTops, std::vector<cv::Point> rawBots, std::vector<cv::Point> quadTops, std::vector<cv::Point> quadBots, std::vector<cv::Mat>& medialMatrices);
-void warpToQuadrangleBill(cv::Mat medialBill, cv::Mat& quadBill, std::vector<cv::Point> rawLefts, std::vector<cv::Point> rawRights, std::vector<cv::Point> quadLefts, std::vector<cv::Point> quadRights, std::vector<cv::Mat>& quadMatrices);
-void warpToRectangleBill(cv::Mat quadBill, cv::Mat& rectBill, std::vector<cv::Point> quadCorners, cv::Mat& rectMatrix);
-void setRectCheckPoints(std::vector<cv::Point2f>& rectPoints);
-void getOriginalPoints(std::vector<cv::Point2f> rectPoints, std::vector<cv::Point2f>& orgPoints, cv::Mat rectMatrix, std::vector<cv::Mat> quadMatrices, std::vector<cv::Mat> medialMatrices, cv::Mat rectBill, cv::Mat image, cv::Mat orgImage);
-void getOriginalRects(std::vector<cv::Point2f>& orgPoints, std::vector<std::vector<cv::Point2f>>& orgQuads, std::vector<cv::Rect>& orgRects);
-void getInformations(cv::Mat orgImage, std::vector<cv::Mat>& informations, std::vector<std::vector<cv::Point2f>> orgQuads, std::vector<cv::Rect> orgRects);
-void getMovingDistances(std::vector<cv::Mat> checkBoxes, std::vector<float>& movingDistances);
-void setRectPoints(std::vector<cv::Point2f>& rectPoints, std::vector<float> movingDistances);
-void writeInformationBoxes(std::vector<std::vector<cv::Mat>> informationBoxes);
+float get_euclid_distance(cv::Point p1, cv::Point p2);
+void find_nearest_point(std::vector<cv::Point> sequences, cv::Point root, cv::Point& result);
+void select_top_contours(std::vector<std::vector<cv::Point>> src,
+                         std::vector<std::vector<cv::Point>>& dst,
+                         int top,
+                         int mode,
+                         int minSize,
+                         double minArea);
+
+void execute_main(cv::Mat orgImage, cv::Mat image, std::vector<cv::Mat>& informations);
+void get_bill_contour(cv::Mat image, std::vector<std::vector<cv::Point>>& contours);
+void get_corners_from_contour(std::vector<cv::Point> sequences, std::vector<cv::Point>& rawCorners);
+void get_raw_vertices(cv::Mat filledRawContour,
+                      std::vector<cv::Point> rawCorners,
+                      int noHrzPieces,
+                      std::vector<cv::Point>& rawTops,
+                      std::vector<cv::Point>& rawBots,
+                      int noVtcPieces,
+                      std::vector<cv::Point>& rawLefts,
+                      std::vector<cv::Point>& rawRights);
+void get_quadrangle_vertices(std::vector<cv::Point> quadCorners,
+                             int noHrzPieces,
+                             int noVtcPieces,
+                             std::vector<cv::Point>& quadTops,
+                             std::vector<cv::Point>& quadBots,
+                             std::vector<cv::Point>& quadLefts,
+                             std::vector<cv::Point>& quadRights);
+void warp_to_medial_bill(cv::Mat rawBill,
+                         cv::Mat& medialBill,
+                         std::vector<cv::Point> rawTops,
+                         std::vector<cv::Point> rawBots,
+                         std::vector<cv::Point> quadTops,
+                         std::vector<cv::Point> quadBots,
+                         std::vector<cv::Mat>& medialMatrices);
+void warp_to_quadrangle_bill(cv::Mat medialBill,
+                             cv::Mat& quadBill,
+                             std::vector<cv::Point> rawLefts,
+                             std::vector<cv::Point> rawRights,
+                             std::vector<cv::Point> quadLefts,
+                             std::vector<cv::Point> quadRights,
+                             std::vector<cv::Mat>& quadMatrices);
+void warp_to_rectangle_bill(cv::Mat quadBill,
+                            cv::Mat& rectBill,
+                            std::vector<cv::Point> quadCorners,
+                            cv::Mat& rectMatrix);
+void set_rectangle_check_points(std::vector<cv::Point2f>& rectPoints);
+void get_original_points(std::vector<cv::Point2f> rectPoints,
+                         std::vector<cv::Point2f>& orgPoints,
+                         cv::Mat rectMatrix,
+                         std::vector<cv::Mat> quadMatrices,
+                         std::vector<cv::Mat> medialMatrices,
+                         cv::Mat rectBill,
+                         cv::Mat image,
+                         cv::Mat orgImage);
+void get_original_rectangles(std::vector<cv::Point2f>& orgPoints,
+                             std::vector<std::vector<cv::Point2f>>& orgQuads,
+                             std::vector<cv::Rect>& orgRects);
+void get_information(cv::Mat orgImage,
+                     std::vector<cv::Mat>& informations,
+                     std::vector<std::vector<cv::Point2f>> orgQuads,
+                     std::vector<cv::Rect> orgRects);
+void get_moving_distances(std::vector<cv::Mat> checkBoxes, std::vector<float>& movingDistances);
+void set_rectangle_points(std::vector<cv::Point2f>& rectPoints, std::vector<float> movingDistances);
+void write_information_boxes(std::vector<std::vector<cv::Mat>> informationBoxes);
 
 int main() {
     std::string dirName = "input_images/";
@@ -66,7 +112,7 @@ int main() {
         std::vector<cv::Mat> informations;
         cv::resize(orgImage, image, cv::Size(round(1000 * orgImage.cols / (float)orgImage.rows), 1000), 0, 0, cv::INTER_CUBIC);
         resizedImages.push_back(image);
-        executeMain(orgImage, image, informations);
+        execute_main(orgImage, image, informations);
         informationBoxes.push_back(informations);
         idx++;
     }
@@ -82,26 +128,26 @@ int main() {
     }
 
     ///Write information boxes
-    writeInformationBoxes(informationBoxes);
+    write_information_boxes(informationBoxes);
 
     return 0;
 }
 
-float cvEuclidDistf(cv::Point p1, cv::Point p2) {
+float get_euclid_distance(cv::Point p1, cv::Point p2) {
     int dx = p2.x - p1.x;
     int dy = p2.y - p1.y;
     return sqrt((float)(dx * dx + dy * dy));
 }
 
-void cvFindNearestPoint(std::vector<cv::Point> sequences, cv::Point root, cv::Point& result) {
+void find_nearest_point(std::vector<cv::Point> sequences, cv::Point root, cv::Point& result) {
     if (sequences.size() == 0) {
         return;
     }
 
     result = sequences[0];
-    float minDist = cvEuclidDistf(sequences[0], root);
+    float minDist = get_euclid_distance(sequences[0], root);
     for (unsigned int i = 1; i < sequences.size(); i++) {
-        float dist = cvEuclidDistf(sequences[i], root);
+        float dist = get_euclid_distance(sequences[i], root);
         if (dist < minDist) {
             result = sequences[i];
             minDist = dist;
@@ -109,7 +155,12 @@ void cvFindNearestPoint(std::vector<cv::Point> sequences, cv::Point root, cv::Po
     }
 }
 
-void cvSelectTopContours(std::vector<std::vector<cv::Point>> src, std::vector<std::vector<cv::Point>>& dst, int top, int mode, int minSize, double minArea) {
+void select_top_contours(std::vector<std::vector<cv::Point>> src,
+                         std::vector<std::vector<cv::Point>>& dst,
+                         int top,
+                         int mode,
+                         int minSize,
+                         double minArea) {
     dst.clear();
     int sizeOfSrc = src.size();
     if (sizeOfSrc != 0) {
@@ -145,7 +196,7 @@ void cvSelectTopContours(std::vector<std::vector<cv::Point>> src, std::vector<st
     }
 }
 
-void getBillContour(cv::Mat image, std::vector<std::vector<cv::Point>>& contour) {
+void get_bill_contour(cv::Mat image, std::vector<std::vector<cv::Point>>& contour) {
     cv::Mat redChannel(image.size(), CV_8UC1);
     int from_To[] = {2, 0};
     cv::mixChannels(&image, 1, &redChannel, 1, from_To, 1);
@@ -157,23 +208,30 @@ void getBillContour(cv::Mat image, std::vector<std::vector<cv::Point>>& contour)
 
     std::vector<cv::Vec4i> hierarchy;
     cv::findContours(binaryImg, contour, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
-    cvSelectTopContours(contour, contour, 1, CV_SELECT_CONTOUR_AREA, 0, 100);
+    select_top_contours(contour, contour, 1, CV_SELECT_CONTOUR_AREA, 0, 100);
 }
 
-void getCornersFromContour(std::vector<cv::Point> sequences, std::vector<cv::Point>& rawCorners) {
+void get_corners_from_contour(std::vector<cv::Point> sequences, std::vector<cv::Point>& rawCorners) {
     cv::Rect boundRect = cv::boundingRect(sequences);
     cv::Point temp;
-    cvFindNearestPoint(sequences, boundRect.tl(), temp);
+    find_nearest_point(sequences, boundRect.tl(), temp);
     rawCorners[0] = temp;
-    cvFindNearestPoint(sequences, cv::Point(boundRect.x + boundRect.width, boundRect.y), temp);
+    find_nearest_point(sequences, cv::Point(boundRect.x + boundRect.width, boundRect.y), temp);
     rawCorners[1] = temp;
-    cvFindNearestPoint(sequences, boundRect.br(), temp);
+    find_nearest_point(sequences, boundRect.br(), temp);
     rawCorners[2] = temp;
-    cvFindNearestPoint(sequences, cv::Point(boundRect.x, boundRect.y + boundRect.height), temp);
+    find_nearest_point(sequences, cv::Point(boundRect.x, boundRect.y + boundRect.height), temp);
     rawCorners[3] = temp;
 }
 
-void getRawVertices(cv::Mat filledRawContour, std::vector<cv::Point> rawCorners, int noHrzPieces, std::vector<cv::Point>& rawTops, std::vector<cv::Point>& rawBots, int noVtcPieces, std::vector<cv::Point>& rawLefts, std::vector<cv::Point>& rawRights) {
+void get_raw_vertices(cv::Mat filledRawContour,
+                      std::vector<cv::Point> rawCorners,
+                      int noHrzPieces,
+                      std::vector<cv::Point>& rawTops,
+                      std::vector<cv::Point>& rawBots,
+                      int noVtcPieces,
+                      std::vector<cv::Point>& rawLefts,
+                      std::vector<cv::Point>& rawRights) {
     rawTops.push_back(rawCorners[0]);
     rawBots.push_back(rawCorners[3]);
     rawLefts.push_back(rawCorners[0]);
@@ -231,7 +289,13 @@ void getRawVertices(cv::Mat filledRawContour, std::vector<cv::Point> rawCorners,
     rawRights.push_back(rawCorners[2]);
 }
 
-void getquadVertices(std::vector<cv::Point> quadCorners, int noHrzPieces, int noVtcPieces, std::vector<cv::Point>& quadTops, std::vector<cv::Point>& quadBots, std::vector<cv::Point>& quadLefts, std::vector<cv::Point>& quadRights) {
+void get_quadrangle_vertices(std::vector<cv::Point> quadCorners,
+                             int noHrzPieces,
+                             int noVtcPieces,
+                             std::vector<cv::Point>& quadTops,
+                             std::vector<cv::Point>& quadBots,
+                             std::vector<cv::Point>& quadLefts,
+                             std::vector<cv::Point>& quadRights) {
     quadTops.push_back(quadCorners[0]);
     quadBots.push_back(quadCorners[3]);
     quadLefts.push_back(quadCorners[0]);
@@ -267,7 +331,13 @@ void getquadVertices(std::vector<cv::Point> quadCorners, int noHrzPieces, int no
     quadRights.push_back(quadCorners[2]);
 }
 
-void warpToMedialBill(cv::Mat rawBill, cv::Mat& medialBill, std::vector<cv::Point> rawTops, std::vector<cv::Point> rawBots, std::vector<cv::Point> quadTops, std::vector<cv::Point> quadBots, std::vector<cv::Mat>& medialMatrices) {
+void warp_to_medial_bill(cv::Mat rawBill,
+                         cv::Mat& medialBill,
+                         std::vector<cv::Point> rawTops,
+                         std::vector<cv::Point> rawBots,
+                         std::vector<cv::Point> quadTops,
+                         std::vector<cv::Point> quadBots,
+                         std::vector<cv::Mat>& medialMatrices) {
     medialMatrices.clear();
     for (unsigned int i = 0; i < rawTops.size() - 1; i++) {
         std::vector<cv::Point2f> prePoints(4), curPoints(4);
@@ -344,7 +414,13 @@ void warpToMedialBill(cv::Mat rawBill, cv::Mat& medialBill, std::vector<cv::Poin
     }
 }
 
-void warpToQuadrangleBill(cv::Mat medialBill, cv::Mat& quadBill, std::vector<cv::Point> rawLefts, std::vector<cv::Point> rawRights, std::vector<cv::Point> quadLefts, std::vector<cv::Point> quadRights, std::vector<cv::Mat>& quadMatrices) {
+void warp_to_quadrangle_bill(cv::Mat medialBill,
+                             cv::Mat& quadBill,
+                             std::vector<cv::Point> rawLefts,
+                             std::vector<cv::Point> rawRights,
+                             std::vector<cv::Point> quadLefts,
+                             std::vector<cv::Point> quadRights,
+                             std::vector<cv::Mat>& quadMatrices) {
     quadMatrices.clear();
     for (unsigned int i = 0; i < rawLefts.size() - 1; i++) {
         std::vector<cv::Point2f> prePoints(4), curPoints(4);
@@ -399,7 +475,10 @@ void warpToQuadrangleBill(cv::Mat medialBill, cv::Mat& quadBill, std::vector<cv:
     }
 }
 
-void warpToRectangleBill(cv::Mat quadBill, cv::Mat& rectBill, std::vector<cv::Point> quadCorners, cv::Mat& rectMatrix) {
+void warp_to_rectangle_bill(cv::Mat quadBill,
+                            cv::Mat& rectBill,
+                            std::vector<cv::Point> quadCorners,
+                            cv::Mat& rectMatrix) {
     cv::Rect boundRect = cv::Rect(0, 0, 1000, 600);
     std::vector<cv::Point2f> prePoints(4), curPoints(4);
     prePoints[0] = quadCorners[0];
@@ -418,7 +497,7 @@ void warpToRectangleBill(cv::Mat quadBill, cv::Mat& rectBill, std::vector<cv::Po
     cv::warpPerspective(quadBill, rectBill, P, boundRect.size(), cv::INTER_CUBIC);
 }
 
-void setRectCheckPoints(std::vector<cv::Point2f>& rectCheckPoints) {
+void set_rectangle_check_points(std::vector<cv::Point2f>& rectCheckPoints) {
     //check 1
     rectCheckPoints[0] = cv::Point2f(260, 228);
     rectCheckPoints[1] = cv::Point2f(270, 228);
@@ -450,7 +529,14 @@ void setRectCheckPoints(std::vector<cv::Point2f>& rectCheckPoints) {
     rectCheckPoints[19] = cv::Point2f(960, 468);
 }
 
-void getOriginalPoints(std::vector<cv::Point2f> rectPoints, std::vector<cv::Point2f>& orgPoints, cv::Mat rectMatrix, std::vector<cv::Mat> quadMatrices, std::vector<cv::Mat> medialMatrices, cv::Mat rectBill, cv::Mat image, cv::Mat orgImage) {
+void get_original_points(std::vector<cv::Point2f> rectPoints,
+                         std::vector<cv::Point2f>& orgPoints,
+                         cv::Mat rectMatrix,
+                         std::vector<cv::Mat> quadMatrices,
+                         std::vector<cv::Mat> medialMatrices,
+                         cv::Mat rectBill,
+                         cv::Mat image,
+                         cv::Mat orgImage) {
     std::vector<int> quadIdx;
     for (unsigned int i = 0; i < rectPoints.size(); i++) {
         quadIdx.push_back(floor(quadMatrices.size() * rectPoints[i].y / rectBill.rows));
@@ -491,7 +577,9 @@ void getOriginalPoints(std::vector<cv::Point2f> rectPoints, std::vector<cv::Poin
     }
 }
 
-void getOriginalRects(std::vector<cv::Point2f>& orgPoints, std::vector<std::vector<cv::Point2f>>& orgQuads, std::vector<cv::Rect>& orgRects) {
+void get_original_rectangles(std::vector<cv::Point2f>& orgPoints,
+                             std::vector<std::vector<cv::Point2f>>& orgQuads,
+                             std::vector<cv::Rect>& orgRects) {
     for (unsigned int i = 0; i < orgPoints.size(); i += 4) {
         std::vector<cv::Point2f> orgQuad;
         for (int j = 0; j < 4; j++) {
@@ -503,7 +591,10 @@ void getOriginalRects(std::vector<cv::Point2f>& orgPoints, std::vector<std::vect
     }
 }
 
-void getInformations(cv::Mat orgImage, std::vector<cv::Mat>& informations, std::vector<std::vector<cv::Point2f>> orgQuads, std::vector<cv::Rect> orgRects) {
+void get_information(cv::Mat orgImage,
+                     std::vector<cv::Mat>& informations,
+                     std::vector<std::vector<cv::Point2f>> orgQuads,
+                     std::vector<cv::Rect> orgRects) {
     informations.clear();
     for (unsigned int i = 0; i < orgRects.size(); i++) {
         orgRects[i].x = 0;
@@ -527,7 +618,7 @@ void getInformations(cv::Mat orgImage, std::vector<cv::Mat>& informations, std::
     }
 }
 
-void getMovingDistances(std::vector<cv::Mat> checkBoxes, std::vector<float>& movingDistances) {
+void get_moving_distances(std::vector<cv::Mat> checkBoxes, std::vector<float>& movingDistances) {
     movingDistances.clear();
     for (unsigned int i = 0; i < checkBoxes.size(); i++) {
         cv::Mat binaryImg, thresholdImg;
@@ -538,7 +629,7 @@ void getMovingDistances(std::vector<cv::Mat> checkBoxes, std::vector<float>& mov
         std::vector<std::vector<cv::Point>> contour;
         std::vector<cv::Vec4i> hierarchy;
         cv::findContours(thresholdImg, contour, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
-        cvSelectTopContours(contour, contour, 1, CV_SELECT_CONTOUR_AREA, 0, 1);
+        select_top_contours(contour, contour, 1, CV_SELECT_CONTOUR_AREA, 0, 1);
         if (contour.size() != 0) {
             cv::Rect boundRect = cv::boundingRect(contour[0]);
             float originalDist = (boundRect.y + boundRect.height / 2.0f) - checkBoxes[i].rows / 2.0f;
@@ -550,7 +641,7 @@ void getMovingDistances(std::vector<cv::Mat> checkBoxes, std::vector<float>& mov
     }
 }
 
-void setRectPoints(std::vector<cv::Point2f>& rectPoints, std::vector<float> movingDistances) {
+void set_rectangle_points(std::vector<cv::Point2f>& rectPoints, std::vector<float> movingDistances) {
     //box 1
     rectPoints[0] = cv::Point2f(250, 160 + movingDistances[0]);
     rectPoints[1] = cv::Point2f(390, 160 + movingDistances[0]);
@@ -582,11 +673,11 @@ void setRectPoints(std::vector<cv::Point2f>& rectPoints, std::vector<float> movi
     rectPoints[19] = cv::Point2f(715, 447 + movingDistances[4]);
 }
 
-void executeMain(cv::Mat orgImage, cv::Mat image, std::vector<cv::Mat>& informations) {
+void execute_main(cv::Mat orgImage, cv::Mat image, std::vector<cv::Mat>& informations) {
     double t1 = clock();
     ///Get bill contour
     std::vector<std::vector<cv::Point>> contour;
-    getBillContour(image, contour);
+    get_bill_contour(image, contour);
     if (contour.size() != 1)
         return;
 
@@ -601,21 +692,21 @@ void executeMain(cv::Mat orgImage, cv::Mat image, std::vector<cv::Mat>& informat
 
     ///Get raw corners
     std::vector<cv::Point> rawCorners(4);
-    getCornersFromContour(rawContour[0], rawCorners);
+    get_corners_from_contour(rawContour[0], rawCorners);
 
     ///Get raw top vertices and raw bot vertices
     std::vector<cv::Point> rawTops, rawBots, rawLefts, rawRights;
     int noHrzPieces = 10;
     int noVtcPieces = 6;
-    getRawVertices(filledRawContour, rawCorners, noHrzPieces, rawTops, rawBots, noVtcPieces, rawLefts, rawRights);
+    get_raw_vertices(filledRawContour, rawCorners, noHrzPieces, rawTops, rawBots, noVtcPieces, rawLefts, rawRights);
 
     ///Get quadrangle corners
     std::vector<cv::Point> quadCorners(4);
-    getCornersFromContour(quadContour[0], quadCorners);
+    get_corners_from_contour(quadContour[0], quadCorners);
 
     ///Get quadrangle vertices
     std::vector<cv::Point> quadTops, quadBots, quadLefts, quadRights;
-    getquadVertices(quadCorners, noHrzPieces, noVtcPieces, quadTops, quadBots, quadLefts, quadRights);
+    get_quadrangle_vertices(quadCorners, noHrzPieces, noVtcPieces, quadTops, quadBots, quadLefts, quadRights);
 
     double t2 = clock();
     ///Warp to medial bill
@@ -623,57 +714,57 @@ void executeMain(cv::Mat orgImage, cv::Mat image, std::vector<cv::Mat>& informat
     cv::bitwise_and(filledRawContour, image, rawBill);
     cv::Mat medialBill = cv::Mat::zeros(image.size(), CV_8UC3);
     std::vector<cv::Mat> medialMatrices;
-    warpToMedialBill(rawBill, medialBill, rawTops, rawBots, quadTops, quadBots, medialMatrices);
+    warp_to_medial_bill(rawBill, medialBill, rawTops, rawBots, quadTops, quadBots, medialMatrices);
 
     double t3 = clock();
     ///Warp to quadrangle bill
     cv::Mat quadBill = cv::Mat::zeros(medialBill.size(), CV_8UC3);
     std::vector<cv::Mat> quadMatrices;
-    warpToQuadrangleBill(medialBill, quadBill, rawLefts, rawRights, quadLefts, quadRights, quadMatrices);
+    warp_to_quadrangle_bill(medialBill, quadBill, rawLefts, rawRights, quadLefts, quadRights, quadMatrices);
 
     double t4 = clock();
     ///Warp to rectangle bill
     cv::Mat rectBill = cv::Mat::zeros(quadBill.size(), CV_8UC3);
     cv::Mat rectMatrix;
-    warpToRectangleBill(quadBill, rectBill, quadCorners, rectMatrix);
+    warp_to_rectangle_bill(quadBill, rectBill, quadCorners, rectMatrix);
 
     double t5 = clock();
     ///Set rectangle check points
     std::vector<cv::Point2f> rectCheckPoints(20);
-    setRectCheckPoints(rectCheckPoints);
+    set_rectangle_check_points(rectCheckPoints);
 
     ///Get original check points
     std::vector<cv::Point2f> orgCheckPoints;
-    getOriginalPoints(rectCheckPoints, orgCheckPoints, rectMatrix, quadMatrices, medialMatrices, rectBill, image, orgImage);
+    get_original_points(rectCheckPoints, orgCheckPoints, rectMatrix, quadMatrices, medialMatrices, rectBill, image, orgImage);
 
     ///Get original check quads, rectangles
     std::vector<std::vector<cv::Point2f>> orgCheckQuads;
     std::vector<cv::Rect> orgCheckRects;
-    getOriginalRects(orgCheckPoints, orgCheckQuads, orgCheckRects);
+    get_original_rectangles(orgCheckPoints, orgCheckQuads, orgCheckRects);
 
     ///Get check boxes information
     std::vector<cv::Mat> checkBoxes;
-    getInformations(orgImage, checkBoxes, orgCheckQuads, orgCheckRects);
+    get_information(orgImage, checkBoxes, orgCheckQuads, orgCheckRects);
 
     ///Get moving distance
     std::vector<float> movingDistances;
-    getMovingDistances(checkBoxes, movingDistances);
+    get_moving_distances(checkBoxes, movingDistances);
 
     ///Set rectangle points
     std::vector<cv::Point2f> rectPoints(20);
-    setRectPoints(rectPoints, movingDistances);
+    set_rectangle_points(rectPoints, movingDistances);
 
     ///Get original points
     std::vector<cv::Point2f> orgPoints;
-    getOriginalPoints(rectPoints, orgPoints, rectMatrix, quadMatrices, medialMatrices, rectBill, image, orgImage);
+    get_original_points(rectPoints, orgPoints, rectMatrix, quadMatrices, medialMatrices, rectBill, image, orgImage);
 
     ///Get original check quads, rectangles
     std::vector<std::vector<cv::Point2f>> orgQuads;
     std::vector<cv::Rect> orgRects;
-    getOriginalRects(orgPoints, orgQuads, orgRects);
+    get_original_rectangles(orgPoints, orgQuads, orgRects);
 
     ///Get billing information
-    getInformations(orgImage, informations, orgQuads, orgRects);
+    get_information(orgImage, informations, orgQuads, orgRects);
 
     double t6 = clock();
 
@@ -686,7 +777,7 @@ void executeMain(cv::Mat orgImage, cv::Mat image, std::vector<cv::Mat>& informat
     std::cout << "Total time: " << t6 - t1 << std::endl;
 }
 
-void writeInformationBoxes(std::vector<std::vector<cv::Mat>> informationBoxes) {
+void write_information_boxes(std::vector<std::vector<cv::Mat>> informationBoxes) {
     for (unsigned int i = 0; i < informationBoxes.size(); i++) {
         for (unsigned int j = 0; j < informationBoxes[i].size(); j++) {
             std::string str = "output_images_";
