@@ -117,13 +117,13 @@ int main()
         resized_images.push_back(image);
         execute_main(original_image, image, information_vector);
         information_boxes.push_back(information_vector);
-        index++;
+        ++index;
     }
 
-    for (unsigned int i = 0; i < information_boxes.size(); i++)
+    for (unsigned int i = 0; i < information_boxes.size(); ++i)
     {
         cv::imshow("Resized image", resized_images[i]);
-        for (unsigned int j = 0; j < information_boxes[i].size(); j++)
+        for (unsigned int j = 0; j < information_boxes[i].size(); ++j)
         {
             std::string str = "information box ";
             str.append(std::to_string(j));
@@ -154,7 +154,7 @@ void find_nearest_point(const std::vector<cv::Point>& sequences, const cv::Point
 
     result = sequences[0];
     float min_distance = get_euclid_distance(sequences[0], root);
-    for (unsigned int i = 1; i < sequences.size(); i++)
+    for (unsigned int i = 1; i < sequences.size(); ++i)
     {
         float this_distance = get_euclid_distance(sequences[i], root);
         if (this_distance < min_distance)
@@ -178,7 +178,7 @@ std::vector<std::vector<cv::Point>> select_top_contours(const std::vector<std::v
         if (mode == CV_SELECT_CONTOUR_SIZE)
         {
             std::vector<int> source_sizes;
-            for (int i = 0; i < source_size; i++)
+            for (int i = 0; i < source_size; ++i)
             {
                 source_sizes.push_back(source[i].size());
             }
@@ -186,7 +186,7 @@ std::vector<std::vector<cv::Point>> select_top_contours(const std::vector<std::v
             std::sort(sorted_source_sizes.begin(), sorted_source_sizes.end());
             int min_size_index = MAX(source_size - MAX(top, 1), 0);
             int this_min_size = MAX(sorted_source_sizes[min_size_index], min_size);
-            for (int i = 0; i < source_size; i++)
+            for (int i = 0; i < source_size; ++i)
             {
                 if (source_sizes[i] >= this_min_size)
                 {
@@ -197,7 +197,7 @@ std::vector<std::vector<cv::Point>> select_top_contours(const std::vector<std::v
         else
         {
             std::vector<double> source_areas;
-            for (int i = 0; i < source_size; i++)
+            for (int i = 0; i < source_size; ++i)
             {
                 source_areas.push_back(cv::contourArea(source[i]));
             }
@@ -205,7 +205,7 @@ std::vector<std::vector<cv::Point>> select_top_contours(const std::vector<std::v
             std::sort(sorted_source_areas.begin(), sorted_source_areas.end());
             int min_area_index = MAX(source_size - MAX(top, 1), 0);
             double this_min_area = MAX(sorted_source_areas[min_area_index], min_area);
-            for (int i = 0; i < source_size; i++)
+            for (int i = 0; i < source_size; ++i)
             {
                 if (source_areas[i] >= this_min_area)
                 {
@@ -260,13 +260,13 @@ void get_raw_vertices(const cv::Mat& filled_raw_contours_image,
     raw_bots.push_back(raw_corners[3]);
     raw_lefts.push_back(raw_corners[0]);
     raw_rights.push_back(raw_corners[1]);
-    for (int i = 1; i < number_of_horizontal_pieces; i++)
+    for (int i = 1; i < number_of_horizontal_pieces; ++i)
     {
         cv::Point temporary_point;
         temporary_point.x = round(((number_of_horizontal_pieces - i) * raw_corners[0].x + i * raw_corners[1].x) / (float)number_of_horizontal_pieces);
         int middle_y = (raw_corners[0].y + raw_corners[3].y) / 2;
 
-        for (int y = 0; y < middle_y; y++)
+        for (int y = 0; y < middle_y; ++y)
         {
             if (filled_raw_contours_image.at<cv::Vec3b>(y, temporary_point.x)[0] == 0 && filled_raw_contours_image.at<cv::Vec3b>(y + 1, temporary_point.x)[0] != 0)
             {
@@ -277,7 +277,7 @@ void get_raw_vertices(const cv::Mat& filled_raw_contours_image,
         raw_tops.push_back(temporary_point);
 
         temporary_point.x = round(((number_of_horizontal_pieces - i) * raw_corners[3].x + i * raw_corners[2].x) / (float)number_of_horizontal_pieces);
-        for (int y = middle_y; y < filled_raw_contours_image.rows; y++)
+        for (int y = middle_y; y < filled_raw_contours_image.rows; ++y)
         {
             if (filled_raw_contours_image.at<cv::Vec3b>(y - 1, temporary_point.x)[0] != 0 && filled_raw_contours_image.at<cv::Vec3b>(y, temporary_point.x)[0] == 0)
             {
@@ -288,13 +288,13 @@ void get_raw_vertices(const cv::Mat& filled_raw_contours_image,
         raw_bots.push_back(temporary_point);
     }
 
-    for (int i = 1; i < number_of_vertical_pieces; i++)
+    for (int i = 1; i < number_of_vertical_pieces; ++i)
     {
         cv::Point temporary_point;
         temporary_point.y = round(((number_of_vertical_pieces - i) * raw_corners[0].y + i * raw_corners[3].y) / (float)number_of_vertical_pieces);
         int middle_x = (raw_corners[0].x + raw_corners[1].x) / 2;
 
-        for (int x = 0; x < middle_x; x++)
+        for (int x = 0; x < middle_x; ++x)
         {
             if (filled_raw_contours_image.at<cv::Vec3b>(temporary_point.y, x)[0] == 0 && filled_raw_contours_image.at<cv::Vec3b>(temporary_point.y, x + 1)[0] != 0)
             {
@@ -306,7 +306,7 @@ void get_raw_vertices(const cv::Mat& filled_raw_contours_image,
 
         temporary_point.y = round(((number_of_vertical_pieces - i) * raw_corners[1].y + i * raw_corners[2].y) / (float)number_of_vertical_pieces);
 
-        for (int x = middle_x; x < filled_raw_contours_image.cols; x++)
+        for (int x = middle_x; x < filled_raw_contours_image.cols; ++x)
         {
             if (filled_raw_contours_image.at<cv::Vec3b>(temporary_point.y, x - 1)[0] != 0 && filled_raw_contours_image.at<cv::Vec3b>(temporary_point.y, x)[0] == 0)
             {
@@ -336,7 +336,7 @@ void get_quadrangle_vertices(const std::vector<cv::Point>& quadrangle_corners,
     quadrangle_lefts.push_back(quadrangle_corners[0]);
     quadrangle_rights.push_back(quadrangle_corners[1]);
 
-    for (int i = 1; i < number_of_horizontal_pieces; i++)
+    for (int i = 1; i < number_of_horizontal_pieces; ++i)
     {
         cv::Point temporary_point = (number_of_horizontal_pieces - i) * quadrangle_corners[0] + i * quadrangle_corners[1];
         temporary_point.x = round(temporary_point.x / (float)number_of_horizontal_pieces);
@@ -349,7 +349,7 @@ void get_quadrangle_vertices(const std::vector<cv::Point>& quadrangle_corners,
         quadrangle_bots.push_back(temporary_point);
     }
 
-    for (int i = 1; i < number_of_vertical_pieces; i++)
+    for (int i = 1; i < number_of_vertical_pieces; ++i)
     {
         cv::Point temporary_point = (number_of_vertical_pieces - i) * quadrangle_corners[0] + i * quadrangle_corners[3];
         temporary_point.x = round(temporary_point.x / (float)number_of_vertical_pieces);
@@ -377,7 +377,7 @@ void warp_to_medial_bill(const cv::Mat& raw_bill,
                          std::vector<cv::Mat>& medial_matrices)
 {
     medial_matrices.clear();
-    for (unsigned int i = 0; i < raw_tops.size() - 1; i++)
+    for (unsigned int i = 0; i < raw_tops.size() - 1; ++i)
     {
         std::vector<cv::Point2f> previous_points(4), current_points(4);
         previous_points[0] = raw_tops[i];
@@ -464,7 +464,7 @@ void warp_to_quadrangle_bill(const cv::Mat& medial_bill,
                              std::vector<cv::Mat>& quadrangle_matrices)
 {
     quadrangle_matrices.clear();
-    for (unsigned int i = 0; i < raw_lefts.size() - 1; i++)
+    for (unsigned int i = 0; i < raw_lefts.size() - 1; ++i)
     {
         std::vector<cv::Point2f> previous_points(4), current_points(4);
         previous_points[0] = raw_lefts[i];
@@ -585,13 +585,13 @@ std::vector<cv::Point2f> get_original_points(const std::vector<cv::Point2f>& rec
                                              const cv::Mat& original_image)
 {
     std::vector<int> quadrangle_indices;
-    for (unsigned int i = 0; i < rectangle_points.size(); i++)
+    for (unsigned int i = 0; i < rectangle_points.size(); ++i)
     {
         quadrangle_indices.push_back(floor(quadrangle_matrices.size() * rectangle_points[i].y / rectange_bill.rows));
     }
 
     std::vector<int> medial_indices;
-    for (unsigned int i = 0; i < rectangle_points.size(); i++)
+    for (unsigned int i = 0; i < rectangle_points.size(); ++i)
     {
         medial_indices.push_back(floor(medial_matrices.size() * rectangle_points[i].x / rectange_bill.cols));
     }
@@ -601,7 +601,7 @@ std::vector<cv::Point2f> get_original_points(const std::vector<cv::Point2f>& rec
     std::vector<cv::Point2f> raw_points;
     cv::perspectiveTransform(rectangle_points, quadrangle_points, rectangle_matrix);
 
-    for (unsigned int i = 0; i < quadrangle_points.size(); i++)
+    for (unsigned int i = 0; i < quadrangle_points.size(); ++i)
     {
         int index = quadrangle_indices[i];
         std::vector<cv::Point2f> quadrangle_point(1), medial_point;
@@ -610,7 +610,7 @@ std::vector<cv::Point2f> get_original_points(const std::vector<cv::Point2f>& rec
         medial_points.push_back(medial_point[0]);
     }
 
-    for (unsigned int i = 0; i < medial_points.size(); i++)
+    for (unsigned int i = 0; i < medial_points.size(); ++i)
     {
         int index = medial_indices[i];
         std::vector<cv::Point2f> medial_point(1), raw_point;
@@ -620,7 +620,7 @@ std::vector<cv::Point2f> get_original_points(const std::vector<cv::Point2f>& rec
     }
 
     std::vector<cv::Point2f> original_points;
-    for (unsigned int i = 0; i < raw_points.size(); i++)
+    for (unsigned int i = 0; i < raw_points.size(); ++i)
     {
         cv::Point2f original_point;
         original_point.x = raw_points[i].x * original_image.cols / image.cols;
@@ -637,7 +637,7 @@ void get_original_rectangles(const std::vector<cv::Point2f>& original_points,
     for (unsigned int i = 0; i < original_points.size(); i += 4)
     {
         std::vector<cv::Point2f> original_quadrangle;
-        for (int j = 0; j < 4; j++)
+        for (int j = 0; j < 4; ++j)
         {
             original_quadrangle.push_back(original_points[i + j]);
         }
@@ -653,7 +653,7 @@ void get_information(const cv::Mat& original_image,
                      std::vector<cv::Rect>& original_rectangles)
 {
     information_vector.clear();
-    for (unsigned int i = 0; i < original_rectangles.size(); i++)
+    for (unsigned int i = 0; i < original_rectangles.size(); ++i)
     {
         original_rectangles[i].x = 0;
         original_rectangles[i].y = 0;
@@ -679,7 +679,7 @@ void get_information(const cv::Mat& original_image,
 std::vector<float> get_moving_distances(const std::vector<cv::Mat>& check_boxes)
 {
     std::vector<float> moving_distances;
-    for (unsigned int i = 0; i < check_boxes.size(); i++)
+    for (unsigned int i = 0; i < check_boxes.size(); ++i)
     {
         cv::Mat binary_image, threshold_image;
         cv::cvtColor(check_boxes[i], binary_image, CV_BGR2GRAY);
@@ -845,9 +845,9 @@ void execute_main(const cv::Mat& original_image, const cv::Mat& image, std::vect
 
 void write_information_boxes(const std::vector<std::vector<cv::Mat>>& information_boxes)
 {
-    for (unsigned int i = 0; i < information_boxes.size(); i++)
+    for (unsigned int i = 0; i < information_boxes.size(); ++i)
     {
-        for (unsigned int j = 0; j < information_boxes[i].size(); j++)
+        for (unsigned int j = 0; j < information_boxes[i].size(); ++j)
         {
             std::string str = "output_images_";
             str.append(std::to_string(j));
