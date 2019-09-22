@@ -11,9 +11,12 @@ make
 ```
 
 ## Run project
-Copy test data to build folder:
+Clone and copy test data to build folder:
 ```
-cp -r ../../computer_vision_basics_data/electricity_bill_detection/build/* .
+cd ../../
+git clone https://github.com/nqoptik/computer_vision_data.git
+cd electricity_bill_detection/build/
+cp -r ../../computer_vision_data/electricity_bill_detection/build/* .
 ```
 
 Create output folders:
