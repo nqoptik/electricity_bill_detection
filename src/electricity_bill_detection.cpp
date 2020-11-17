@@ -224,12 +224,12 @@ void get_bill_contours(const cv::Mat& image, std::vector<std::vector<cv::Point>>
     cv::mixChannels(&image, 1, &red_channel, 1, from_to, 1);
 
     cv::Mat binary_image;
-    cv::adaptiveThreshold(red_channel, binary_image, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY, 95, 0);
+    cv::adaptiveThreshold(red_channel, binary_image, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY, 95, 0);
     cv::erode(binary_image, binary_image, cv::Mat(), cv::Point(-1, -1), 2, 1, 1);
     cv::dilate(binary_image, binary_image, cv::Mat(), cv::Point(-1, -1), 3, 1, 1);
 
     std::vector<cv::Vec4i> hierarchy;
-    cv::findContours(binary_image, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+    cv::findContours(binary_image, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
     contours = select_top_contours(contours, 1, CV_SELECT_CONTOUR_AREA, 0, 100);
 }
 
@@ -443,7 +443,7 @@ void warp_to_medial_bill(const cv::Mat& raw_bill,
 
         std::vector<std::vector<cv::Point>> piece_corners_vector(1);
         piece_corners_vector[0] = piece_corners;
-        cv::drawContours(piece, piece_corners_vector, 0, cv::Scalar(255, 255, 255), CV_FILLED);
+        cv::drawContours(piece, piece_corners_vector, 0, cv::Scalar(255, 255, 255), cv::FILLED);
 
         cv::bitwise_and(piece, raw_bill, piece);
 
@@ -508,7 +508,7 @@ void warp_to_quadrangle_bill(const cv::Mat& medial_bill,
 
         std::vector<std::vector<cv::Point>> piece_corners_vector(1);
         piece_corners_vector[0] = piece_corners;
-        cv::drawContours(piece, piece_corners_vector, 0, cv::Scalar(255, 255, 255), CV_FILLED);
+        cv::drawContours(piece, piece_corners_vector, 0, cv::Scalar(255, 255, 255), cv::FILLED);
 
         cv::bitwise_and(piece, medial_bill, piece);
 
@@ -682,13 +682,13 @@ std::vector<float> get_moving_distances(const std::vector<cv::Mat>& check_boxes)
     for (unsigned int i = 0; i < check_boxes.size(); ++i)
     {
         cv::Mat binary_image, threshold_image;
-        cv::cvtColor(check_boxes[i], binary_image, CV_BGR2GRAY);
-        cv::threshold(binary_image, threshold_image, 0, 255, CV_THRESH_BINARY_INV | CV_THRESH_OTSU);
+        cv::cvtColor(check_boxes[i], binary_image, cv::COLOR_BGR2GRAY);
+        cv::threshold(binary_image, threshold_image, 0, 255, cv::THRESH_BINARY_INV | cv::THRESH_OTSU);
         cv::dilate(threshold_image, threshold_image, cv::Mat(), cv::Point(-1, -1), 2, 1, 1);
 
         std::vector<std::vector<cv::Point>> contours;
         std::vector<cv::Vec4i> hierarchy;
-        cv::findContours(threshold_image, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+        cv::findContours(threshold_image, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
         contours = select_top_contours(contours, 1, CV_SELECT_CONTOUR_AREA, 0, 1);
         if (contours.size() != 0)
         {
@@ -758,7 +758,7 @@ void execute_main(const cv::Mat& original_image, const cv::Mat& image, std::vect
 
     // Fill the raw contours
     cv::Mat filled_raw_contours_image = cv::Mat::zeros(image.size(), CV_8UC3);
-    cv::drawContours(filled_raw_contours_image, raw_contours, 0, cv::Scalar(255, 255, 255), CV_FILLED);
+    cv::drawContours(filled_raw_contours_image, raw_contours, 0, cv::Scalar(255, 255, 255), cv::FILLED);
 
     // Get the raw corners
     std::vector<cv::Point> raw_corners(4);
